@@ -7,10 +7,43 @@ import time
 import random
 import json
 
+import network
+import urequests
+import binascii
+import asyncio
 
-N: int = 3
+
+# WiFi credentials
+ssid = "jake (2)"
+passw = "12345678"
+DNS = "8.8.8.8"
+# setting number of flashes to 10
+N: int = 10
 sample_ms = 10.0
 on_ms = 500
+# database url
+data_url = "https://mini-2024-d8147-default-rtdb.firebaseio.com/"
+
+# WiFi connection function
+async def connect_wifi():
+    print(f"Connecting to WiFi {ssid}")
+    sta_if = network.WLAN(network.STA_IF)
+    sta_if.active(True)
+    sta_if.connect(ssid, passw)
+    
+    while not sta_if.isconnected():
+        print(f"Still trying to connect to {ssid}")
+        await asyncio.sleep_ms(1000)
+
+    print(f"Connected to {ssid}")
+    print(f"Setting DNS {DNS}")
+    cfg = list(sta_if.ifconfig())
+    cfg[-1] = DNS
+    sta_if.ifconfig(cfg)
+
+def upload_data(data: dict) -> None:
+    urequests.post(data_url, json=data)
+
 
 
 def random_time_interval(tmin: float, tmax: float) -> float:
@@ -52,12 +85,28 @@ def scorer(t: list[int | None]) -> None:
 
     t_good = [x for x in t if x is not None]
 
+    if t_good:
+        min_time = min(t_good)
+        max_time = max(t_good)
+        avg_time = sum(t_good) / len(t_good)
+
+        print(f"Min response time: {min_time} ms")
+        print(f"Max response time: {max_time} ms")
+        print(f"Avg response time: {avg_time:.2f} ms")
+
     print(t_good)
+
+    score = (len(t) - misses) / len(t)
 
     # add key, value to this dict to store the minimum, maximum, average response time
     # and score (non-misses / total flashes) i.e. the score a floating point number
     # is in range [0..1]
-    data = {}
+    data = {
+        "min": min_time,
+        "max": max_time,
+        "avg": avg_time,
+        "score": score,
+    }
 
     # %% make dynamic filename and write JSON
 
@@ -70,9 +119,15 @@ def scorer(t: list[int | None]) -> None:
 
     write_json(filename, data)
 
+    upload_data(data)
+
 
 if __name__ == "__main__":
     # using "if __name__" allows us to reuse functions in other script files
+
+    connect_wifi()
+
+    print(f"Starting game")
 
     led = Pin("LED", Pin.OUT)
     button = Pin(16, Pin.IN, Pin.PULL_UP)
