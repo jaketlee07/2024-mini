@@ -25,15 +25,18 @@ def quiet():
     speaker.duty_u16(0)
 
 
-freq: float = 30
-duration: float = 0.1  # seconds
+freq = [1319, 1175, 740, 831, 1109, 988, 587, 659, 988, 880, 554, 659, 880] # frequencies are obtained through sheet music
+duration = [8, 8, 16, 16, 8, 8, 16, 16, 8, 8, 16, 16, 32]  # 8 represents a quarter note, 16 represents a half note and 32 is a whole note
+
+
 
 print("Playing frequency (Hz):")
 
-for i in range(64):
-    print(freq)
-    playtone(freq, duration)
-    freq = int(freq * 1.1)
+for i in range(13):
+    print(freq[i])
+    playtone(freq[i], ((duration[i]*4)/150)*0.9) # duration is adjusted for tempo
+    quiet()
+    
 
 # Turn off the PWM
 quiet()
