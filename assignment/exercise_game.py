@@ -15,7 +15,7 @@ import asyncio
 
 # WiFi credentials
 ssid = "jake (2)"
-passw = "12345678"
+passw = ""
 DNS = "8.8.8.8"
 # setting number of flashes to 10
 N: int = 10
@@ -42,7 +42,7 @@ async def connect_wifi():
     sta_if.ifconfig(cfg)
 
 def upload_data(data: dict) -> None:
-    urequests.post(data_url, json=data)
+    urequests.post(data_url + ".json", json=data)
 
 
 
@@ -93,10 +93,12 @@ def scorer(t: list[int | None]) -> None:
         print(f"Min response time: {min_time} ms")
         print(f"Max response time: {max_time} ms")
         print(f"Avg response time: {avg_time:.2f} ms")
+    else:
+        print("No valid responses, all were missed.")
+        min_time = max_time = avg_time = None
 
     print(t_good)
 
-    score = (len(t) - misses) / len(t)
 
     # add key, value to this dict to store the minimum, maximum, average response time
     # and score (non-misses / total flashes) i.e. the score a floating point number
@@ -105,7 +107,6 @@ def scorer(t: list[int | None]) -> None:
         "min": min_time,
         "max": max_time,
         "avg": avg_time,
-        "score": score,
     }
 
     # %% make dynamic filename and write JSON
@@ -130,7 +131,7 @@ if __name__ == "__main__":
     print(f"Starting game")
 
     led = Pin("LED", Pin.OUT)
-    button = Pin(16, Pin.IN, Pin.PULL_UP)
+    button = Pin(12, Pin.IN, Pin.PULL_UP)
 
     t: list[int | None] = []
 
