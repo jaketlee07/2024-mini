@@ -125,7 +125,7 @@ def scorer(t: list[int | None]) -> None:
 if __name__ == "__main__":
     # using "if __name__" allows us to reuse functions in other script files
 
-    connect_wifi()
+    asyncio.run(connect_wifi())
 
     print(f"Starting game")
 
