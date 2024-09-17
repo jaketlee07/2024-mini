@@ -15,6 +15,10 @@ The bright reading was between 47200 and 47500, so we set max_bright to be 50000
 
 ### Images and Videos
 
+https://github.com/user-attachments/assets/30a384e0-07f8-4b28-8e51-1a9d654865e9
+
+
+
 ## Exercise 02
 
 ### Description:
@@ -31,6 +35,12 @@ The duration of the notes were stored in another array where 8 is a quarter note
 
 In the loop, each note and duration was played in order to create the Nokia theme.
 <img width="545" alt="Screenshot 2024-09-17 at 4 46 58 PM" src="https://github.com/user-attachments/assets/45db2d3d-652f-4bab-a444-dcdac8652fb1">
+
+### Images and Videos
+
+https://github.com/user-attachments/assets/122957ca-1a90-4ee4-ab08-07880c59c463
+
+
 
 ## Exercise 03
 
